@@ -23,7 +23,7 @@ import { MovieService, Movie } from '../services/movie.service';
               <p><strong>Ano:</strong> {{ movie.ano }}</p>
               <p><strong>Duração:</strong> {{ movie.duracao }} minutos</p>
               <p><strong>Gênero:</strong> {{ movie.genero }}</p>
-              <p *ngIf="movie.diretor"><strong>Diretor:</strong> {{ movie.diretor }}</p>
+              <p><strong>Descrição:</strong> {{ movie.descricao }}</p>
             </div>
           </div>
         </div>

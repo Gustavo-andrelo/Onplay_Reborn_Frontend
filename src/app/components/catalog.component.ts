@@ -21,8 +21,7 @@ import { MovieService, Movie } from '../services/movie.service';
             <p><strong>Ano:</strong> {{ movie.ano }}</p>
             <p><strong>Duração:</strong> {{ movie.duracao }} min</p>
             <p><strong>Gênero:</strong> {{ movie.genero }}</p>
-            <p *ngIf="movie.diretor"><strong>Diretor:</strong> {{ movie.diretor }}</p>
-            <p *ngIf="movie.sinopse" class="sinopse">{{ movie.sinopse }}</p>
+            <p class="descricao">{{ movie.descricao }}</p>
           </div>
           <button class="play-btn">▶ Assistir</button>
         </div>
@@ -41,7 +40,7 @@ import { MovieService, Movie } from '../services/movie.service';
     .movie-card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
     .movie-card:hover { transform: translateY(-2px); }
     .movie-info p { margin: 0.5rem 0; }
-    .sinopse { font-style: italic; color: #666; }
+    .descricao { font-style: italic; color: #666; }
     .play-btn { width: 100%; padding: 0.75rem; background: #28a745; color: white; border: none; border-radius: 4px; margin-top: 1rem; cursor: pointer; }
     .no-movies { text-align: center; color: #666; margin-top: 2rem; }
   `]

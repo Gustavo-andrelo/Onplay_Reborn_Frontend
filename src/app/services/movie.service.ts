@@ -5,18 +5,20 @@ import { Observable } from 'rxjs';
 export interface Movie {
   id: number;
   nome: string;
+  descricao: string;
+  genero: string;
   ano: number;
   duracao: number;
-  genero: string;
-  diretor?: string;
-  sinopse?: string;
+  faixaEtaria: string;
+  poster: string;
+  linkTrailer: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
-  private apiUrl = 'http://localhost:8080/api/movies';
+  private apiUrl = 'http://localhost:8080/api/catalog';
 
   constructor(private http: HttpClient) {}
 
