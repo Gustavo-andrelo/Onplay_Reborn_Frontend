@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -8,11 +8,14 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private userRole = '';
 
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { username, password });
+    const authToken = btoa(username + ':' + password);
+    localStorage.setItem('auth_token', authToken);
+    return this.http.post(`${this.apiUrl}/auth/login`, { login: username, password });
   }
 
   register(user: any): Observable<any> {
@@ -21,6 +24,26 @@ export class AuthService {
 
   setAuthenticated(value: boolean) {
     this.isAuthenticatedSubject.next(value);
+  }
+
+  setUserRole(role: string) {
+    this.userRole = role;
+    localStorage.setItem('userRole', role);
+  }
+
+  getRole(): string {
+    return this.userRole || localStorage.getItem('userRole') || '';
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'ADMIN';
+  }
+
+  getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('auth_token');
+    return new HttpHeaders({
+      'Authorization': 'Basic ' + token
+    });
   }
 
   isAuthenticated(): Observable<boolean> {
