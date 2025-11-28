@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MovieService, Movie } from '../services/movie.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-catalog',
@@ -11,7 +12,10 @@ import { MovieService, Movie } from '../services/movie.service';
     <div class="container">
       <header>
         <h1>Catálogo de Filmes</h1>
-        <button (click)="logout()" class="logout-btn">Sair</button>
+        <div class="header-buttons">
+          <button *ngIf="authService.isAdmin()" (click)="addMovie()" class="add-btn">➕ Adicionar Filme</button>
+          <button (click)="logout()" class="logout-btn">Sair</button>
+        </div>
       </header>
       
       <div class="movies-grid">
@@ -35,6 +39,8 @@ import { MovieService, Movie } from '../services/movie.service';
   styles: [`
     .container { padding: 2rem; }
     header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .header-buttons { display: flex; gap: 1rem; }
+    .add-btn { padding: 0.5rem 1rem; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .logout-btn { padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
     .movie-card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
@@ -48,7 +54,7 @@ import { MovieService, Movie } from '../services/movie.service';
 export class CatalogComponent implements OnInit {
   movies: Movie[] = [];
 
-  constructor(private movieService: MovieService, private router: Router) {}
+  constructor(private movieService: MovieService, private router: Router, public authService: AuthService) {}
 
   ngOnInit() {
     this.loadMovies();
@@ -63,6 +69,10 @@ export class CatalogComponent implements OnInit {
 
   playMovie(movieId: number) {
     this.router.navigate(['/player', movieId]);
+  }
+
+  addMovie() {
+    this.router.navigate(['/movies/new']);
   }
 
   logout() {

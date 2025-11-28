@@ -94,6 +94,9 @@ export class LoginComponent {
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
         this.authService.setAuthenticated(true);
+        if (response.role) {
+          this.authService.setUserRole(response.role);
+        }
         this.router.navigate(['/catalog']);
       },
       error: (err) => {
