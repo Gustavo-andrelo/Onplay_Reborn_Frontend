@@ -9,66 +9,86 @@ import { MovieService } from '../services/movie.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="container">
-      <div class="form-container">
-        <h2>Adicionar Filme</h2>
+    <div class="min-h-screen bg-black text-white p-6">
+      <div class="max-w-2xl mx-auto">
+        <div class="flex items-center gap-4 mb-8">
+          <button (click)="goBack()" 
+                  class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md font-medium transition-colors">
+            ← Voltar
+          </button>
+          <h2 class="text-3xl font-bold">Adicionar Filme</h2>
+        </div>
         
-        <form (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <input type="text" [(ngModel)]="movie.nome" name="nome" placeholder="Nome" required>
-          </div>
-          
-          <div class="form-group">
-            <textarea [(ngModel)]="movie.descricao" name="descricao" placeholder="Descrição" required></textarea>
-          </div>
-          
-          <div class="form-group">
-            <input type="text" [(ngModel)]="movie.genero" name="genero" placeholder="Gênero" required>
-          </div>
-          
-          <div class="form-group">
-            <input type="number" [(ngModel)]="movie.ano" name="ano" placeholder="Ano" required>
-          </div>
-          
-          <div class="form-group">
-            <input type="number" [(ngModel)]="movie.duracao" name="duracao" placeholder="Duração (min)" required>
-          </div>
-          
-          <div class="form-group">
-            <input type="text" [(ngModel)]="movie.faixaEtaria" name="faixaEtaria" placeholder="Faixa Etária" required>
-          </div>
-          
-          <div class="form-group">
-            <input type="url" [(ngModel)]="movie.poster" name="poster" placeholder="URL do Poster" required>
-          </div>
-          
-          <div class="form-group">
-            <input type="url" [(ngModel)]="movie.linkTrailer" name="linkTrailer" placeholder="URL do Trailer" required>
-          </div>
-          
-          <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-          
-          <div class="buttons">
-            <button type="button" (click)="goBack()" class="cancel-btn">Cancelar</button>
-            <button type="submit" [disabled]="!isFormValid()">Adicionar</button>
-          </div>
-        </form>
+        <div class="bg-gray-900 rounded-lg p-8">
+          <form (ngSubmit)="onSubmit()" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium mb-2">Nome do Filme</label>
+                <input type="text" [(ngModel)]="movie.nome" name="nome" 
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none" required>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Gênero</label>
+                <input type="text" [(ngModel)]="movie.genero" name="genero" 
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none" required>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Ano</label>
+                <input type="number" [(ngModel)]="movie.ano" name="ano" 
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none" required>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Duração (min)</label>
+                <input type="number" [(ngModel)]="movie.duracao" name="duracao" 
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none" required>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Faixa Etária</label>
+                <input type="text" [(ngModel)]="movie.faixaEtaria" name="faixaEtaria" 
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none" required>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">URL do Poster</label>
+                <input type="url" [(ngModel)]="movie.poster" name="poster" 
+                       class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none" required>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-2">URL do Trailer</label>
+              <input type="url" [(ngModel)]="movie.linkTrailer" name="linkTrailer" 
+                     class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-2">Descrição</label>
+              <textarea [(ngModel)]="movie.descricao" name="descricao" rows="4"
+                        class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:border-red-500 focus:outline-none resize-none" required></textarea>
+            </div>
+            
+            <div *ngIf="errorMessage" class="text-red-400 text-center">{{ errorMessage }}</div>
+            
+            <div class="flex gap-4">
+              <button type="button" (click)="goBack()" 
+                      class="flex-1 py-3 bg-gray-700 hover:bg-gray-600 rounded-md font-medium transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" [disabled]="!isFormValid()" 
+                      class="flex-1 py-3 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 rounded-md font-medium transition-colors">
+                Adicionar Filme
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   `,
-  styles: [`
-    .container { padding: 2rem; }
-    .form-container { max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    .form-group { margin-bottom: 1rem; }
-    input, textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-    textarea { height: 100px; resize: vertical; }
-    .buttons { display: flex; gap: 1rem; margin-top: 1.5rem; }
-    button { flex: 1; padding: 0.75rem; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    button[type="submit"] { background: #28a745; color: white; }
-    button:disabled { background: #ccc; cursor: not-allowed; }
-    .cancel-btn { background: #6c757d; color: white; }
-    .error { color: #dc3545; margin: 1rem 0; text-align: center; }
-  `]
+  styles: []
 })
 export class MovieFormComponent {
   movie = {

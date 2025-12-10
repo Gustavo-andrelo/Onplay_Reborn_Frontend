@@ -8,70 +8,50 @@ import { MovieService, Movie } from '../services/movie.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="container">
-      <div class="player-header">
-        <button (click)="goBack()" class="back-btn">← Voltar</button>
-        <h2>{{ movie?.nome }}</h2>
+    <div class="min-h-screen bg-black text-white">
+      <div class="flex items-center gap-4 p-6 border-b border-gray-800">
+        <button (click)="goBack()" 
+                class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md font-medium transition-colors">
+          ← Voltar
+        </button>
+        <h2 class="text-2xl font-bold">{{ movie?.nome }}</h2>
       </div>
       
-      <div class="player-container">
-        <div class="video-placeholder">
-          <div class="play-message">
-            <h3>🎬 Reproduzindo: {{ movie?.nome }}</h3>
-            <p>O filme está sendo reproduzido...</p>
-            <div class="movie-details" *ngIf="movie">
-              <p><strong>Ano:</strong> {{ movie.ano }}</p>
-              <p><strong>Duração:</strong> {{ movie.duracao }} minutos</p>
-              <p><strong>Gênero:</strong> {{ movie.genero }}</p>
-              <p><strong>Descrição:</strong> {{ movie.descricao }}</p>
-            </div>
+      <div class="max-w-6xl mx-auto p-6">
+        <div class="aspect-video bg-gray-900 rounded-lg flex items-center justify-center mb-6 relative overflow-hidden">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🎬</div>
+            <h3 class="text-2xl font-bold mb-2">Reproduzindo: {{ movie?.nome }}</h3>
+            <p class="text-gray-400">Simulando reprodução do filme...</p>
           </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
         </div>
         
-        <div class="controls">
-          <button class="control-btn">⏸️ Pausar</button>
-          <button class="control-btn">⏹️ Parar</button>
-          <button class="control-btn">🔊 Volume</button>
+        <div class="flex justify-center gap-4 mb-8">
+          <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-md font-medium transition-colors">
+            ⏸️ Pausar
+          </button>
+          <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-md font-medium transition-colors">
+            ⏹️ Parar
+          </button>
+          <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-md font-medium transition-colors">
+            🔊 Volume
+          </button>
+        </div>
+        
+        <div *ngIf="movie" class="bg-gray-900 rounded-lg p-6">
+          <h4 class="text-xl font-semibold mb-4">Detalhes do Filme</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
+            <p><span class="text-white font-medium">Ano:</span> {{ movie.ano }}</p>
+            <p><span class="text-white font-medium">Duração:</span> {{ movie.duracao }} minutos</p>
+            <p><span class="text-white font-medium">Gênero:</span> {{ movie.genero }}</p>
+            <p class="md:col-span-2"><span class="text-white font-medium">Descrição:</span> {{ movie.descricao }}</p>
+          </div>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    .container { padding: 2rem; }
-    .player-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-    .back-btn { padding: 0.5rem 1rem; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .player-container { max-width: 800px; margin: 0 auto; }
-    .video-placeholder { 
-      background: #000; 
-      height: 400px; 
-      border-radius: 8px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      color: white; 
-      text-align: center; 
-    }
-    .play-message h3 { margin-bottom: 1rem; font-size: 1.5rem; }
-    .movie-details { margin-top: 1rem; text-align: left; }
-    .movie-details p { margin: 0.5rem 0; }
-    .controls { 
-      display: flex; 
-      justify-content: center; 
-      gap: 1rem; 
-      margin-top: 1rem; 
-      padding: 1rem; 
-      background: #f8f9fa; 
-      border-radius: 8px; 
-    }
-    .control-btn { 
-      padding: 0.75rem 1.5rem; 
-      background: #007bff; 
-      color: white; 
-      border: none; 
-      border-radius: 4px; 
-      cursor: pointer; 
-    }
-  `]
+  styles: []
 })
 export class PlayerComponent implements OnInit {
   movie: Movie | null = null;

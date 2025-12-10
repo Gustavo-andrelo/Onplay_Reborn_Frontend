@@ -35,4 +35,14 @@ export class MovieService {
     const headers = this.authService.getAuthHeaders();
     return this.http.post('http://localhost:8080/api/movies', movie, { headers });
   }
+
+  updateMovie(id: number, movie: any): Observable<any> {
+    const headers = this.authService.getAuthHeaders();
+    return this.http.put(`http://localhost:8080/api/movies/${id}`, movie, { headers });
+  }
+
+  deleteMovie(id: number): Observable<any> {
+    const headers = this.authService.getAuthHeaders();
+    return this.http.delete(`http://localhost:8080/api/movies/${id}`, { headers });
+  }
 }

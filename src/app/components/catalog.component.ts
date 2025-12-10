@@ -9,52 +9,65 @@ import { AuthService } from '../services/auth.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="container">
-      <header>
-        <h1>Catálogo de Filmes</h1>
-        <div class="header-buttons">
-          <button *ngIf="authService.isAdmin()" (click)="addMovie()" class="add-btn">➕ Adicionar Filme</button>
-          <button (click)="logout()" class="logout-btn">Sair</button>
+    <div class="min-h-screen bg-black text-white">
+      <header class="flex justify-between items-center p-6 border-b border-gray-800">
+        <h1 class="text-3xl font-bold text-red-600">OnPlay</h1>
+        <div class="flex gap-3">
+          <button *ngIf="authService.isAdmin()" (click)="addMovie()" 
+                  class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md font-medium transition-colors">
+            ➕ Adicionar Filme
+          </button>
+          <button (click)="logout()" 
+                  class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md font-medium transition-colors">
+            Sair
+          </button>
         </div>
       </header>
       
-      <div class="movies-grid">
-        <div *ngFor="let movie of movies" class="movie-card" (click)="playMovie(movie.id)">
-          <h3>{{ movie.nome }}</h3>
-          <div class="movie-info">
-            <p><strong>Ano:</strong> {{ movie.ano }}</p>
-            <p><strong>Duração:</strong> {{ movie.duracao }} min</p>
-            <p><strong>Gênero:</strong> {{ movie.genero }}</p>
-            <p class="descricao">{{ movie.descricao }}</p>
+      <div class="p-6">
+        <h2 class="text-2xl font-semibold mb-6">Catálogo</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div *ngFor="let movie of movies" 
+               class="bg-gray-900 rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer group"
+               (click)="playMovie(movie.id)">
+            <div class="aspect-[2/3] bg-gray-800 overflow-hidden">
+              <img [src]="movie.poster" [alt]="movie.nome" 
+                   class="w-full h-full object-cover"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+              <div class="w-full h-full bg-gray-800 flex items-center justify-center" style="display: none;">
+                <span class="text-4xl">🎥</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-bold text-lg mb-2 group-hover:text-red-400 transition-colors">{{ movie.nome }}</h3>
+              <div class="space-y-1 text-sm text-gray-400">
+                <p>{{ movie.ano }} • {{ movie.duracao }}min • {{ movie.genero }}</p>
+                <p class="text-gray-300 line-clamp-2">{{ movie.descricao }}</p>
+              </div>
+              <button class="w-full mt-3 py-2 bg-red-600 hover:bg-red-700 rounded-md font-medium transition-colors">
+                ▶ Assistir
+              </button>
+            </div>
           </div>
-          <button class="play-btn">▶ Assistir</button>
         </div>
-      </div>
-      
-      <div *ngIf="movies.length === 0" class="no-movies">
-        Nenhum filme encontrado
+        
+        <div *ngIf="movies.length === 0" class="text-center text-gray-400 mt-12">
+          <p class="text-xl">Nenhum filme encontrado</p>
+        </div>
       </div>
     </div>
   `,
-  styles: [`
-    .container { padding: 2rem; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .header-buttons { display: flex; gap: 1rem; }
-    .add-btn { padding: 0.5rem 1rem; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .logout-btn { padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-    .movie-card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
-    .movie-card:hover { transform: translateY(-2px); }
-    .movie-info p { margin: 0.5rem 0; }
-    .descricao { font-style: italic; color: #666; }
-    .play-btn { width: 100%; padding: 0.75rem; background: #28a745; color: white; border: none; border-radius: 4px; margin-top: 1rem; cursor: pointer; }
-    .no-movies { text-align: center; color: #666; margin-top: 2rem; }
-  `]
+  styles: []
 })
 export class CatalogComponent implements OnInit {
   movies: Movie[] = [];
 
-  constructor(private movieService: MovieService, private router: Router, public authService: AuthService) {}
+  constructor(
+    private movieService: MovieService, 
+    private router: Router,
+    public authService: AuthService 
+  ) {}
 
   ngOnInit() {
     this.loadMovies();
@@ -67,15 +80,16 @@ export class CatalogComponent implements OnInit {
     });
   }
 
-  playMovie(movieId: number) {
-    this.router.navigate(['/player', movieId]);
-  }
-
   addMovie() {
     this.router.navigate(['/movies/new']);
   }
 
+  playMovie(movieId: number) {
+    this.router.navigate(['/player', movieId]);
+  }
+
   logout() {
+    this.authService.setAuthenticated(false);
     this.router.navigate(['/login']);
   }
 }

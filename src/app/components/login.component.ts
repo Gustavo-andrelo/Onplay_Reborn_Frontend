@@ -9,59 +9,66 @@ import { AuthService } from '../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="container">
-      <div class="form-container">
-        <h2>{{ isLogin ? 'Login' : 'Cadastro' }}</h2>
+    <div class="min-h-screen bg-black flex items-center justify-center px-4">
+      <div class="w-full max-w-md bg-black bg-opacity-75 rounded-lg p-8 border border-gray-800">
+        <h2 class="text-3xl font-bold text-white text-center mb-8">{{ isLogin ? 'Entrar' : 'Criar Conta' }}</h2>
         
-        <form (ngSubmit)="onSubmit()">
-          <div class="form-group">
+        <form (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
             <input type="text" [(ngModel)]="username" name="username" 
-                   [placeholder]="isLogin ? 'Usuário ou Email' : 'Nome de Usuário'" required>
+                   [placeholder]="isLogin ? 'Email ou usuário' : 'Nome de usuário'" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-red-500 focus:outline-none" required>
           </div>
           
-          <div *ngIf="!isLogin" class="form-group">
-            <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required>
+          <div *ngIf="!isLogin">
+            <input type="email" [(ngModel)]="email" name="email" placeholder="Email" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-red-500 focus:outline-none" required>
           </div>
           
-          <div class="form-group">
-            <input type="password" [(ngModel)]="password" name="password" placeholder="Senha" required>
+          <div>
+            <input type="password" [(ngModel)]="password" name="password" placeholder="Senha" 
+                   (ngModelChange)="onPasswordChange()"
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-red-500 focus:outline-none" required>
           </div>
           
-          <div *ngIf="!isLogin" class="form-group">
-            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirmar Senha" required>
+          <div *ngIf="!isLogin">
+            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirmar senha" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-red-500 focus:outline-none" required>
           </div>
           
-          <div *ngIf="passwordErrors.length > 0" class="error-messages">
-            <div *ngFor="let error of passwordErrors" class="error">{{ error }}</div>
+          <div *ngIf="!isLogin" class="text-xs text-gray-400 space-y-1">
+            <p class="font-medium">Requisitos da senha:</p>
+            <ul class="list-disc list-inside space-y-0.5">
+              <li>Mínimo 8 caracteres</li>
+              <li>1 letra maiúscula</li>
+              <li>1 letra minúscula</li>
+              <li>1 número</li>
+              <li>1 caractere especial (!&#64;#$%^&amp;*)</li>
+            </ul>
           </div>
           
-          <div *ngIf="errorMessage" class="error center-error">{{ errorMessage }}</div>
+          <div *ngIf="passwordErrors.length > 0" class="bg-red-900 bg-opacity-50 border border-red-600 rounded-md p-3">
+            <div *ngFor="let error of passwordErrors" class="text-red-300 text-sm">{{ error }}</div>
+          </div>
           
-          <button type="submit" [disabled]="!isFormValid()">{{ isLogin ? 'Entrar' : 'Cadastrar' }}</button>
+          <div *ngIf="errorMessage" class="text-red-400 text-center text-sm">{{ errorMessage }}</div>
+          
+          <button type="submit" [disabled]="!isFormValid()" 
+                  class="w-full py-3 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors">
+            {{ isLogin ? 'Entrar' : 'Criar Conta' }}
+          </button>
         </form>
         
-        <p>
-          {{ isLogin ? 'Não tem conta?' : 'Já tem conta?' }}
-          <a href="#" (click)="toggleMode($event)">{{ isLogin ? 'Cadastre-se' : 'Faça login' }}</a>
+        <p class="text-gray-400 text-center mt-6">
+          {{ isLogin ? 'Novo por aqui?' : 'Já tem uma conta?' }}
+          <a href="#" (click)="toggleMode($event)" class="text-white hover:underline ml-1">
+            {{ isLogin ? 'Assine agora' : 'Entre agora' }}
+          </a>
         </p>
       </div>
     </div>
   `,
-  styles: [`
-    .container { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f5f5f5; }
-    .form-container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 350px; }
-    h2 { text-align: center; margin-bottom: 1.5rem; color: #333; }
-    .form-group { margin-bottom: 1rem; }
-    input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-    button { width: 100%; padding: 0.75rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 1rem; }
-    button:disabled { background: #ccc; cursor: not-allowed; }
-    .error-messages { margin: 1rem 0; background: #fff0f0; padding: 0.5rem; border-radius: 4px; border: 1px solid #ffcccc; }
-    .error { color: #dc3545; font-size: 0.8rem; margin-bottom: 0.25rem; }
-    .center-error { text-align: center; margin-top: 1rem; }
-    p { text-align: center; margin-top: 1.5rem; }
-    a { color: #007bff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-  `]
+  styles: []
 })
 export class LoginComponent {
   isLogin = true;
@@ -137,7 +144,19 @@ export class LoginComponent {
     if (this.isLogin) {
       return !!(this.username && this.password);
     }
-    return !!(this.username && this.email && this.password && this.confirmPassword && this.passwordErrors.length === 0);
+    
+    if (!this.password) {
+      return false;
+    }
+    
+    const passwordValid = this.authService.validatePassword(this.password).length === 0;
+    return !!(this.username && this.email && this.password && this.confirmPassword && passwordValid);
+  }
+
+  onPasswordChange() {
+    if (!this.isLogin && this.password) {
+      this.passwordErrors = this.authService.validatePassword(this.password);
+    }
   }
 
   clearForm() {
